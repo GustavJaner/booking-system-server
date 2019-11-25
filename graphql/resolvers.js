@@ -14,6 +14,7 @@ const resolvers = {
     services: () => Service.find({}),
     service: (_, args) => Service.findById({ _id: args.id }),
     roomByService: (_, args) => Room.find({ serviceId: args.id }),
+    booking: () => (_, args) => Booking.findById({ id_: args.id }),
     bookings: () => Booking.find({}),
     bookingsByRoom: (_, args) => Booking.find({ roomId: args.id })
   },
@@ -114,6 +115,19 @@ const resolvers = {
       const { date, startTime, endTime, id, bookedBy, roomId } = booking;
       const newBooking = new Booking(booking);
       return newBooking.save();
+    },
+
+    updateBooking: (parent, booking, { pubsub }) => {
+      return Booking.findOneAndUpdate(
+        { _id: booking.id },
+        { ...booking },
+        { upsert: false }
+      );
+    },
+    removeBooking: (parent, booking, { pubsub }) => {
+      return Booking.findByIdAndRemove({ _id: booking.id })
+        .then(() => true)
+        .catch(() => false);
     }
   }
 };

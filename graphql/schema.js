@@ -47,6 +47,7 @@ const typeDefs = gql`
     service(id: ID!): Service
     roomByService(id: ID!): [Room]
     bookings: [Booking]
+    booking(id: ID!): Booking
     bookingsByRoom(id: ID!): [Booking]
   }
   type Mutation {
@@ -83,6 +84,15 @@ const typeDefs = gql`
       bookedBy: String!
       roomId: String!
     ): Booking
+    updateBooking(
+      id: ID!
+      startTime: String
+      endTime: String
+      date: String!
+      bookedBy: String
+      roomId: String
+    ): Booking
+    removeBooking(id: ID!): Boolean
   }
   type UpdateResponse {
     success: Boolean!
