@@ -37,6 +37,12 @@ const resolvers = {
       return parent.roomIds.map(id => Room.findById(id));
     }
   },
+  User: {
+    access(parent) {
+      return Access.findById({ _id: parent.access });
+    }
+  },
+
   Subscription: {
     postUpdated: {
       subscribe: (_, args, { pubsub }) => pubsub.asyncIterator([POST_UPDATED])
