@@ -4,7 +4,6 @@ const bookingSchema = new Schema({
   date: String,
   startTime: String,
   endTime: String,
-  id: String,
   bookedBy: String,
   roomId: String
 });

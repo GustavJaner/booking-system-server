@@ -28,6 +28,9 @@ const resolvers = {
     }
   },
   Booking: {
+    bookedBy(parent) {
+      return User.findById({ _id: parent.bookedBy})
+    },
     room(parent) {
       return Room.findById({ _id: parent.roomId });
     }

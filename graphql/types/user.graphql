@@ -7,7 +7,7 @@ type User {
 }
 
 type Query {
-  users: [User]
+  users: [User!]!
 }
 
 type Mutation {
@@ -15,6 +15,6 @@ type Mutation {
     name: String!
     email: String!
     token: String!
-    access: AccessGroup!
+    access: ID!
   ): User
 }
