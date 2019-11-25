@@ -3,6 +3,7 @@ const Room = require("../models/room/room");
 const Service = require("../models/service/service");
 const Booking = require("../models/booking/booking");
 const User = require("../models/user/user");
+const Access = require("../models/accessgroup/accessgroup");
 
 const POST_UPDATED = "POST_UPDATED";
 
@@ -19,6 +20,7 @@ const resolvers = {
     bookings: () => Booking.find({}),
     bookingsByRoom: (_, args) => Booking.find({ roomId: args.id }),
     users: () => User.find({}),
+    accessgroups: () => Access.find({})
   },
   Room: {
     service(parent) {
@@ -28,6 +30,11 @@ const resolvers = {
   Booking: {
     room(parent) {
       return Room.findById({ _id: parent.roomId });
+    }
+  },
+  AccessGroup: {
+    async rooms(parent) {
+      return parent.roomIds.map(id => Room.findById(id));
     }
   },
   Subscription: {
@@ -118,7 +125,6 @@ const resolvers = {
         .catch(() => false);
     },
     addBooking: (parent, booking, { pubsub }) => {
-      const { date, startTime, endTime, id, bookedBy, roomId } = booking;
       const newBooking = new Booking(booking);
       return newBooking.save();
     },
@@ -134,6 +140,10 @@ const resolvers = {
       return Booking.findByIdAndRemove({ _id: booking.id })
         .then(() => true)
         .catch(() => false);
+    },
+    addAccessGroup: (parent, access, { pubsub }) => {
+      const newAccess = new Access(access);
+      return newAccess.save();
     }
   }
 };
