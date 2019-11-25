@@ -1,21 +1,19 @@
 const express = require("express");
 const { PubSub } = require("apollo-server");
 const http = require("http");
-
-const pubsub = new PubSub();
 const { ApolloServer } = require("apollo-server-express");
-
 const mongoose = require("mongoose");
+const typeDefs = require("./graphql/schema");
+const resolvers = require("./graphql/resolvers");
+const credentials = require('./credentials');
 
-const db = require("./config").mongoURI;
+
 mongoose
-  .connect(db, { useUnifiedTopology: true, useNewUrlParser: true })
+  .connect(credentials.MONGO_URI, { useUnifiedTopology: true, useNewUrlParser: true })
   .then(() => console.log("DB connected"))
   .catch(err => console.log(err));
 
-const typeDefs = require("./graphql/schema");
-
-const resolvers = require("./graphql/resolvers");
+const pubsub = new PubSub();
 
 const server = new ApolloServer({
   typeDefs,
