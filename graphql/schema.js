@@ -40,7 +40,7 @@ const typeDefs = gql`
   type Mutation {
     addPost(title: String!, content: String!): Post
     removePost(id: ID!): Boolean
-    updatePost(id: ID!, title: String!, content: String!): Post
+    updatePost(id: ID!, title: String, content: String): Post
     addRoom(
       start: String!
       end: String!
@@ -52,13 +52,14 @@ const typeDefs = gql`
     ): Room
     removeRoom(id: ID!): Boolean
     updateRoom(
-      start: String!
-      end: String!
-      duration: Int!
-      name: String!
-      adress: String!
+      start: String
+      end: String
+      duration: Int
+      name: String
+      adress: String
       description: String
-      serviceId: ID!
+      serviceId: ID
+      id: ID!
     ): Room
     addService(name: String!): Service
     removeService(id: ID!): Boolean
