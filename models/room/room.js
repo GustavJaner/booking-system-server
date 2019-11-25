@@ -1,7 +1,6 @@
 const { Schema, model } = require("mongoose");
 
 const RoomSchema = new Schema({
-  bookingIds: [String],
   start: String,
   end: String,
   duration: String,

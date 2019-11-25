@@ -1,6 +1,7 @@
 const Post = require("../models/post/post");
 const Room = require("../models/room/room");
 const Service = require("../models/service/service");
+const Booking = require("../models/booking/booking");
 
 const POST_UPDATED = "POST_UPDATED";
 
@@ -12,11 +13,17 @@ const resolvers = {
     room: async (_, args) => Room.findById({ _id: args.id }),
     services: () => Service.find({}),
     service: (_, args) => Service.findById({ _id: args.id }),
-    roomByService: (_, args) => Room.find({ serviceId: args.id })
+    roomByService: (_, args) => Room.find({ serviceId: args.id }),
+    bookings: () => Booking.find({})
   },
   Room: {
     service(parent) {
       return Service.findById({ _id: parent.serviceId });
+    }
+  },
+  Booking: {
+    room(parent) {
+      return Room.findById({ _id: parent.roomId });
     }
   },
   Subscription: {
@@ -101,6 +108,11 @@ const resolvers = {
       return Service.findByIdAndRemove({ _id: service.id })
         .then(() => true)
         .catch(() => false);
+    },
+    addBooking: (parent, booking, { pubsub }) => {
+      const { date, startTime, endTime, id, bookedBy, roomId } = booking;
+      const newBooking = new Booking(booking);
+      return newBooking.save();
     }
   }
 };
