@@ -14,7 +14,8 @@ const resolvers = {
     services: () => Service.find({}),
     service: (_, args) => Service.findById({ _id: args.id }),
     roomByService: (_, args) => Room.find({ serviceId: args.id }),
-    bookings: () => Booking.find({})
+    bookings: () => Booking.find({}),
+    bookingsByRoom: (_, args) => Booking.find({ roomId: args.id })
   },
   Room: {
     service(parent) {

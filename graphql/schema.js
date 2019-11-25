@@ -47,6 +47,7 @@ const typeDefs = gql`
     service(id: ID!): Service
     roomByService(id: ID!): [Room]
     bookings: [Booking]
+    bookingsByRoom(id: ID!): [Booking]
   }
   type Mutation {
     addPost(title: String!, content: String!): Post
