@@ -83,6 +83,18 @@ const resolvers = {
       const createdUser = await newUser.save();
       return createdUser;
     },
+    removeUser: async (_, args) => {
+      return User.findByIdAndDelete({ _id: args.id })
+        .then(() => true)
+        .catch(() => false);
+    },
+    updateUser: async (_, args) => {
+      return User.findOneAndUpdate(
+        { _id: args.id },
+        { ...args },
+        { upsert: false },
+      );
+    },
     addRoom: async (parent, room, { pubsub }) => {
       const {
         start,

@@ -17,4 +17,12 @@ type Mutation {
     token: String!
     access: ID!
   ): User
+  removeUser(id: ID!): Boolean
+  updateUser(
+    id: ID!
+    name: String
+    email: String
+    token: String
+    access: ID
+  ): User
 }
