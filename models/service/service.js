@@ -8,6 +8,6 @@ serviceSchema.method("toJSON", function() {
   object.id = _id;
   return object;
 });
-const Service = model("post", serviceSchema);
+const Service = model("service", serviceSchema);
 
 module.exports = Service;
