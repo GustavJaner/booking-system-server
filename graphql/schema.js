@@ -34,6 +34,14 @@ const typeDefs = gql`
     room: Room
   }
 
+  type User {
+    id: ID
+    name: String
+    email: String
+    token: String # Todo
+    access: String # AccessGroup
+  }
+
   type Service {
     name: String
     id: ID
@@ -49,11 +57,19 @@ const typeDefs = gql`
     bookings: [Booking]
     booking(id: ID!): Booking
     bookingsByRoom(id: ID!): [Booking]
+    users: [User]
   }
+
   type Mutation {
     addPost(title: String!, content: String!): Post
     removePost(id: ID!): Boolean
     updatePost(id: ID!, title: String, content: String): Post
+    addUser(
+      name: String!,
+      email: String!,
+      token: String!,
+      access: String!
+    ): User
     addRoom(
       start: String!
       end: String!

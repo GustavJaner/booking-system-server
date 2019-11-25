@@ -2,6 +2,7 @@ const Post = require("../models/post/post");
 const Room = require("../models/room/room");
 const Service = require("../models/service/service");
 const Booking = require("../models/booking/booking");
+const User = require("../models/user/user");
 
 const POST_UPDATED = "POST_UPDATED";
 
@@ -16,7 +17,8 @@ const resolvers = {
     roomByService: (_, args) => Room.find({ serviceId: args.id }),
     booking: () => (_, args) => Booking.findById({ id_: args.id }),
     bookings: () => Booking.find({}),
-    bookingsByRoom: (_, args) => Booking.find({ roomId: args.id })
+    bookingsByRoom: (_, args) => Booking.find({ roomId: args.id }),
+    users: () => User.find({}),
   },
   Room: {
     service(parent) {
@@ -60,8 +62,12 @@ const resolvers = {
         { upsert: false }
       );
     },
+    addUser: async (_, args) => {
+      const newUser = new User(args);
+      const createdUser = await newUser.save();
+      return createdUser;
+    },
     addRoom: async (parent, room, { pubsub }) => {
-      console.log("rooom", room);
       const {
         start,
         end,
