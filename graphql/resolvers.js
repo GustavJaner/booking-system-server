@@ -4,7 +4,8 @@ const Service = require("../models/service/service");
 const Booking = require("../models/booking/booking");
 const User = require("../models/user/user");
 const Access = require("../models/accessgroup/accessgroup");
-
+const AccessGroupRoom = require("../models/accessgrouproom/accessgrouproom");
+const _ = require("lodash");
 const POST_UPDATED = "POST_UPDATED";
 
 const resolvers = {
@@ -20,16 +21,23 @@ const resolvers = {
     bookings: () => Booking.find({}),
     bookingsByRoom: (_, args) => Booking.find({ roomId: args.id }),
     users: () => User.find({}),
-    accessGroups: () => Access.find({})
+    accessGroups: () => Access.find({}),
+    accessGroupRooms: () => AccessGroupRoom.find({})
   },
   Room: {
     service(parent) {
       return Service.findById({ _id: parent.serviceId });
+    },
+    async accessGroups(parent) {
+      let list = await AccessGroupRoom.find({ roomId: parent._id });
+      return await list.map(item =>
+        Access.findById({ _id: item.accessGroupId })
+      );
     }
   },
   Booking: {
     user(parent) {
-      return User.findById({ _id: parent.user})
+      return User.findById({ _id: parent.userId });
     },
     room(parent) {
       return Room.findById({ _id: parent.roomId });
@@ -37,7 +45,8 @@ const resolvers = {
   },
   AccessGroup: {
     async rooms(parent) {
-      return parent.roomIds.map(id => Room.findById(id));
+      let list = await AccessGroupRoom.find({ accessGroupId: parent._id });
+      return await list.map(item => Room.findById({ _id: item.roomId }));
     }
   },
   User: {
@@ -45,7 +54,14 @@ const resolvers = {
       return Access.findById({ _id: parent.accessGroup });
     }
   },
-
+  AccessGroupRoom: {
+    room(parent) {
+      return Room.findById({ _id: parent.roomId });
+    },
+    accessGroup(parent) {
+      return Access.findById({ _id: parent.accessGroupId });
+    }
+  },
   Subscription: {
     postUpdated: {
       subscribe: (_, args, { pubsub }) => pubsub.asyncIterator([POST_UPDATED])
@@ -92,7 +108,7 @@ const resolvers = {
       return User.findOneAndUpdate(
         { _id: args.id },
         { ...args },
-        { upsert: false },
+        { upsert: false }
       );
     },
     addRoom: async (parent, room, { pubsub }) => {
@@ -103,7 +119,8 @@ const resolvers = {
         name,
         adress,
         description,
-        serviceId
+        serviceId,
+        accessGroupIds
       } = room;
       const newRoom = new Room({
         start,
@@ -115,16 +132,47 @@ const resolvers = {
         serviceId
       });
       const createdRoom = await newRoom.save();
+      const newList = await accessGroupIds.map(
+        accessGroupId =>
+          new AccessGroupRoom({
+            roomId: createdRoom._id,
+            accessGroupId
+          })
+      );
+      newList.forEach(item => item.save());
       return createdRoom;
     },
-    updateRoom: (parent, room, { pubsub }) => {
-      return Room.findOneAndUpdate(
-        { _id: room.id },
-        { ...room },
-        { upsert: false }
-      );
+    updateRoom: async (parent, room, { pubsub }) => {
+      if (_.isEmpty(room.accessGroupIds)) {
+        return Room.findOneAndUpdate(
+          { _id: room.id },
+          { ...room },
+          { upsert: false }
+        );
+      } else {
+        AccessGroupRoom.remove({
+          roomId: room.id
+        });
+        let list = await accessGroupIds.map(
+          id =>
+            new AccessGroupRoom({
+              roomId: room.id,
+              accessGroupId: id
+            })
+        );
+        list.map(item => item.save());
+        delete room.accessGroupIds;
+        return Room.findOneAndUpdate(
+          { _id: room.id },
+          { ...room },
+          { upsert: false }
+        );
+      }
     },
     removeRoom: (parent, room, { pubsub }) => {
+      AccessGroupRoom.remove({
+        roomId: room.id
+      });
       return Room.findByIdAndRemove({ _id: room.id })
         .then(() => true)
         .catch(() => false);

@@ -1,0 +1,9 @@
+type AccessGroupRoom {
+  id: ID!
+  room: Room
+  accessGroup: AccessGroup
+}
+
+type Query {
+  accessGroupRooms: [AccessGroupRoom]
+}
