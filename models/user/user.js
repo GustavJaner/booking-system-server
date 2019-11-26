@@ -4,7 +4,7 @@ const UserSchema = new Schema({
   name: String,
   email: String,
   token: String,
-  access: String,
+  accessGroupId: String,
 });
 
 UserSchema.method("toJSON", function() {

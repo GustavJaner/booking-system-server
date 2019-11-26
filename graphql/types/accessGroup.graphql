@@ -5,9 +5,9 @@ type AccessGroup {
 }
 
 type Query {
-  accessgroups: [AccessGroup]
+  accessGroups: [AccessGroup]
 }
 
 type Mutation {
-  addAccessGroup(description: String!, roomIds: [ID]): AccessGroup
+  addAccessGroup(description: String!): AccessGroup
 }

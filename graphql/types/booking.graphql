@@ -3,7 +3,7 @@ type Booking {
   date: String
   startTime: String
   endTime: String
-  bookedBy: User
+  user: User
   room: Room
 }
 
@@ -18,7 +18,7 @@ type Mutation {
       startTime: String!
       endTime: String!
       date: String!
-      bookedBy: ID!
+      userId: ID!
       roomId: ID!
     ): Booking
     removeBooking(id: ID!): Boolean
@@ -27,7 +27,7 @@ type Mutation {
       startTime: String
       endTime: String
       date: String!
-      bookedBy: String
+      userId: String
       roomId: String
     ): Booking
 }

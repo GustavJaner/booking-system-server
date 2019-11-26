@@ -20,7 +20,7 @@ const resolvers = {
     bookings: () => Booking.find({}),
     bookingsByRoom: (_, args) => Booking.find({ roomId: args.id }),
     users: () => User.find({}),
-    accessgroups: () => Access.find({})
+    accessGroups: () => Access.find({})
   },
   Room: {
     service(parent) {
@@ -28,8 +28,8 @@ const resolvers = {
     }
   },
   Booking: {
-    bookedBy(parent) {
-      return User.findById({ _id: parent.bookedBy})
+    user(parent) {
+      return User.findById({ _id: parent.user})
     },
     room(parent) {
       return Room.findById({ _id: parent.roomId });
@@ -41,8 +41,8 @@ const resolvers = {
     }
   },
   User: {
-    access(parent) {
-      return Access.findById({ _id: parent.access });
+    accessGroup(parent) {
+      return Access.findById({ _id: parent.accessGroup });
     }
   },
 
