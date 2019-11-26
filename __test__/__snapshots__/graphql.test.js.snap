@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Testing Database + GraphQL Query with GraphQL 1`] = `
+Object {
+  "data": Object {
+    "posts": Array [
+      Object {
+        "content": "test",
+        "id": "5ddbe5847ceb39a3be31146b",
+        "title": "string",
+      },
+      Object {
+        "content": "mmm",
+        "id": "5ddbf6a5f9fbc0b250dd71b7",
+        "title": "mumma",
+      },
+      Object {
+        "content": "mmmasdasd",
+        "id": "5ddbf6b7f9fbc0b250dd71b8",
+        "title": "jajajfeef",
+      },
+    ],
+  },
+}
+`;
