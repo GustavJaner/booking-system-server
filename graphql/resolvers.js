@@ -210,9 +210,19 @@ const resolvers = {
         .then(() => true)
         .catch(() => false);
     },
-    addAccessGroup: (parent, access, { pubsub }) => {
+    addAccessGroup: (parent, access) => {
       const newAccess = new Access(access);
       return newAccess.save();
+    },
+    updateAccessGroup: (parent, access) => {
+      return Access.findOneAndUpdate(
+        { _id: access.id },
+        { ...access },
+        { upsert: false }
+      );
+    },
+    removeAccessGroup: (parent, access) => {
+      return Access.remove({ _id: access.id });
     }
   }
 };
