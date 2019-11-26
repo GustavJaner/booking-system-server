@@ -3,7 +3,7 @@ type User {
   name: String
   email: String
   token: String # Todo
-  accessGroup: AccessGroup # AccessGroup
+  accessGroup: AccessGroup
 }
 
 type Query {

@@ -1,4 +1,5 @@
-// TODO
+const User = require("../models/user/user");
+
 
 export default {
   Query: {
