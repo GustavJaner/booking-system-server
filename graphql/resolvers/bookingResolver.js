@@ -2,12 +2,12 @@ const Booking = require("../../models/booking/booking");
 const User = require("../../models/user/user");
 const Room = require("../../models/room/room");
 
-
 const resolver = {
   Query: {
-    bookings: () =>  Booking.find({}),
+    bookings: () => Booking.find({}),
     booking: () => (_, args) => Booking.findById({ id_: args.id }),
     bookingsByRoom: (_, args) => Booking.find({ roomId: args.id }),
+    bookingsByDate: (_, args) => Booking.find({ date: args.date })
   },
   Mutation: {
     addBooking: (parent, booking, { pubsub }) => {
@@ -25,7 +25,7 @@ const resolver = {
         { ...booking },
         { upsert: false }
       );
-    },
+    }
   },
   Booking: {
     user(parent) {
@@ -34,7 +34,7 @@ const resolver = {
     room(parent) {
       return Room.findById({ _id: parent.roomId });
     }
-  },
+  }
 };
 
 module.exports = resolver;

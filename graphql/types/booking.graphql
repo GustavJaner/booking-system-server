@@ -11,23 +11,24 @@ type Query {
   bookings: [Booking]
   booking(id: ID!): Booking
   bookingsByRoom(id: ID!): [Booking]
+  bookingsByDate(date: String!): [Booking]
 }
 
 type Mutation {
   addBooking(
-      startTime: String!
-      endTime: String!
-      date: String!
-      userId: ID!
-      roomId: ID!
-    ): Booking
-    removeBooking(id: ID!): Boolean
-    updateBooking(
-      id: ID!
-      startTime: String
-      endTime: String
-      date: String!
-      userId: String
-      roomId: String
-    ): Booking
+    startTime: String!
+    endTime: String!
+    date: String!
+    userId: ID!
+    roomId: ID!
+  ): Booking
+  removeBooking(id: ID!): Boolean
+  updateBooking(
+    id: ID!
+    startTime: String
+    endTime: String
+    date: String!
+    userId: String
+    roomId: String
+  ): Booking
 }
