@@ -4,10 +4,10 @@ const bookingSchema = new Schema({
   date: String,
   startTime: String,
   endTime: String,
-  id: String,
-  bookedBy: String,
+  userId: String,
   roomId: String
 });
+
 bookingSchema.method("toJSON", function() {
   const { __v, _id, ...object } = this.toObject();
   object.id = _id;

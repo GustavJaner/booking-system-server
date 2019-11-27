@@ -1,0 +1,33 @@
+type Booking {
+  id: ID!
+  date: String
+  startTime: String
+  endTime: String
+  user: User
+  room: Room
+}
+
+type Query {
+  bookings: [Booking]
+  booking(id: ID!): Booking
+  bookingsByRoom(id: ID!): [Booking]
+}
+
+type Mutation {
+  addBooking(
+      startTime: String!
+      endTime: String!
+      date: String!
+      userId: ID!
+      roomId: ID!
+    ): Booking
+    removeBooking(id: ID!): Boolean
+    updateBooking(
+      id: ID!
+      startTime: String
+      endTime: String
+      date: String!
+      userId: String
+      roomId: String
+    ): Booking
+}

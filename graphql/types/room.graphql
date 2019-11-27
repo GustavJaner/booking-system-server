@@ -1,0 +1,42 @@
+type Room {
+  id: ID!
+  start: String
+  end: String
+  duration: Int
+  name: String
+  adress: String
+  description: String
+  service: Service
+  accessGroups: [AccessGroup]
+}
+
+type Query {
+  rooms: [Room]
+  room(id: ID!): Room
+  roomByService(id: ID!): [Room]
+}
+
+type Mutation {
+  addRoom(
+    start: String!
+    end: String!
+    duration: Int!
+    name: String!
+    adress: String!
+    description: String
+    serviceId: ID!
+    accessGroupIds: [ID!]!
+  ): Room
+  removeRoom(id: ID!): Boolean
+  updateRoom(
+    start: String
+    end: String
+    duration: Int
+    name: String
+    adress: String
+    description: String
+    serviceId: ID
+    id: ID!
+    accessGroupIds: [ID!]
+  ): Room
+}

@@ -1,0 +1,5 @@
+  type PostUpdated {
+    added: Post
+    removed: Post
+    updated: Post
+  }

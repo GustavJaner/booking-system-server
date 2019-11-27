@@ -1,0 +1,15 @@
+type AccessGroup {
+  id: ID
+  description: String
+  rooms: [Room]
+}
+
+type Query {
+  accessGroups: [AccessGroup]
+}
+
+type Mutation {
+  addAccessGroup(description: String!): AccessGroup
+  removeAccessGroup(id: ID!): AccessGroup
+  updateAccessGroup(id: ID!, description: String!): AccessGroup
+}

@@ -1,0 +1,5 @@
+type UpdateResponse {
+  success: Boolean!
+  message: String
+  Posts: [Post]
+}

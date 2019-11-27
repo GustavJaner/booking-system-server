@@ -3,7 +3,7 @@ const { PubSub } = require("apollo-server");
 const http = require("http");
 const { ApolloServer } = require("apollo-server-express");
 const mongoose = require("mongoose");
-const typeDefs = require("./graphql/schema");
+const typeDefs = require("./graphql/typeDefs");
 const resolvers = require("./graphql/resolvers");
 const credentials = require('./credentials');
 

@@ -1,0 +1,28 @@
+type User {
+  id: ID!
+  name: String
+  email: String
+  token: String # Todo
+  accessGroup: AccessGroup
+}
+
+type Query {
+  users: [User!]!
+}
+
+type Mutation {
+  addUser(
+    name: String!
+    email: String!
+    token: String!
+    accessGroupId: ID!
+  ): User
+  removeUser(id: ID!): Boolean
+  updateUser(
+    id: ID!
+    name: String
+    email: String
+    token: String
+    accessGroupId: ID
+  ): User
+}
