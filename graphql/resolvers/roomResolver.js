@@ -4,12 +4,11 @@ const AccessGroupRoom = require("../../models/accessgrouproom/accessgrouproom");
 const Access = require("../../models/accessgroup/accessgroup");
 const _ = require("lodash");
 
-
 const resolver = {
   Query: {
     rooms: () => Room.find({}),
     room: async (_, args) => Room.findById({ _id: args.id }),
-    roomByService: (_, args) => Room.find({ serviceId: args.id }),
+    roomByService: (_, args) => Room.find({ serviceId: args.id })
   },
   Mutation: {
     addRoom: async (parent, room, { pubsub }) => {
@@ -33,18 +32,18 @@ const resolver = {
         serviceId
       });
       const createdRoom = await newRoom.save();
-      const newList = await accessGroupIds.map(
-        accessGroupId =>
-          new AccessGroupRoom({
-            roomId: createdRoom._id,
-            accessGroupId
-          })
+
+      AccessGroupRoom.collection.insert(
+        accessGroupIds.map(accessGroupId => ({
+          roomId: createdRoom.id,
+          accessGroupId: accessGroupId
+        }))
       );
-      newList.forEach(item => item.save());
+
       return createdRoom;
     },
-    removeRoom: (parent, room, { pubsub }) => {
-      AccessGroupRoom.remove({
+    removeRoom: async (parent, room, { pubsub }) => {
+      await AccessGroupRoom.deleteMany({
         roomId: room.id
       });
       return Room.findByIdAndRemove({ _id: room.id })
@@ -53,23 +52,16 @@ const resolver = {
     },
     updateRoom: async (parent, room, { pubsub }) => {
       if (_.isEmpty(room.accessGroupIds)) {
-        return Room.findOneAndUpdate(
-          { _id: room.id },
-          { ...room },
-          { upsert: false }
-        );
+        return Room.findOneAndUpdate({ _id: room.id }, { ...room });
       } else {
-        AccessGroupRoom.remove({
+        AccessGroupRoom.deleteMany({
           roomId: room.id
         });
-        let list = await accessGroupIds.map(
-          id =>
-            new AccessGroupRoom({
-              roomId: room.id,
-              accessGroupId: id
-            })
+        AccessGroupRoom.collection.insert(
+          accessGroupIds.map(accessGroupId => {
+            return { roomId: room.id, accessGroupId: accessGroupId };
+          })
         );
-        list.map(item => item.save());
         delete room.accessGroupIds;
         return Room.findOneAndUpdate(
           { _id: room.id },
@@ -77,7 +69,7 @@ const resolver = {
           { upsert: false }
         );
       }
-    },
+    }
   },
   Room: {
     service(parent) {
@@ -85,11 +77,11 @@ const resolver = {
     },
     async accessGroups(parent) {
       let list = await AccessGroupRoom.find({ roomId: parent._id });
-      return await list.map(item =>
-        Access.findById({ _id: item.accessGroupId })
-      );
-    },
-  },
+      return await Access.find({
+        _id: { $in: list.map(item => item.accessGroupId) }
+      });
+    }
+  }
 };
 
 module.exports = resolver;
