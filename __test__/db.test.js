@@ -28,16 +28,16 @@ describe('Testing Database', () => {
 
   test('Adding a new Booking to testing DB and checks that data is added and valid', async () => {
     const booking = db.collection('booking');
-    const bookingData = {date: "måndag", startTime: "10.00", endTime: "11.30", bookedBy: "Stoffe", roomId: "3A : 1002"}; 
+    const bookingData = {startTime: "10.00", endTime: "11.30", date: "måndag", userId: "5ddd2243ce955abae1ba844c", roomId: "5dde3bdd7ef98ac5f9b3fd8f"}; 
     const newBooking = new Booking(bookingData);  
     await booking.insertOne(newBooking)
     const savedBooking = await booking.findOne(newBooking);
 
     expect(savedBooking._id).toBeDefined();
-    expect(savedBooking.date).toBe(bookingData.date);
     expect(savedBooking.startTime).toBe(bookingData.startTime);
     expect(savedBooking.endTime).toBe(bookingData.endTime);
-    expect(savedBooking.bookedBy).toBe(bookingData.bookedBy);
+    expect(savedBooking.date).toBe(bookingData.date);
+    expect(savedBooking.userId).toBe(bookingData.userId);
     expect(savedBooking.roomId).toBe(bookingData.roomId);
   });
 

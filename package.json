@@ -27,7 +27,8 @@
     "moment": "^2.24.0",
     "mongoose": "^5.7.12",
     "nodemon": "^2.0.1",
-    "request-promise": "^4.2.5"
+    "request-promise": "^4.2.5",
+    "schema-dot-org-types": "^0.1.11"
   },
   "devDependencies": {
     "jest": "^24.9.0"

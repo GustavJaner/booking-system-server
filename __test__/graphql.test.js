@@ -1,8 +1,5 @@
 const { graphql } = require('graphql');
 const {MongoClient} = require('mongodb');
-
-const schema = require('../graphql/schema');
-const post = require('../models/post/post');
 const credentials = require('../credentials');
 
 var rp = require('request-promise');
@@ -39,13 +36,39 @@ describe('Testing Database + GraphQL', () => {
         }
     `;
 
-    const rootValue = {};
-    const context = () => ({id, title, content})
-  
     const response = await rp({method: 'POST', uri: API, body: {query}, json: true});
     expect(response).toMatchSnapshot();
+  });
 
-    //const result = await graphql(schema, query, rootValue, context);
-    //console.log(result)
+  
+  test('Add new post and see that it appears in DB', async () => {  
+        const mutation = `
+            mutation {
+                addPost(title: "testing", content: "test123") {    
+                    id
+                    title
+                    content
+                }
+            }
+        `;
+
+
+    const request = await rp({method: 'POST', uri: API, body: {mutation}, json: true});
+    /*
+    expect(request).toMatchSnapshot();
+   
+    const query = `
+        query{
+            posts {    
+                id
+                title
+                content
+            }
+        }
+    `;
+
+    const response = await rp({method: 'POST', uri: API, body: {query}, json: true});
+    expect(response).toMatchSnapshot();
+  */  
   });
 });
