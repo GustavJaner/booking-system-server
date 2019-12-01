@@ -8,7 +8,16 @@ const resolver = {
   Query: {
     rooms: () => Room.find({}),
     room: async (_, args) => Room.findById({ _id: args.id }),
-    roomByService: (_, args) => Room.find({ serviceId: args.id })
+    roomByService: (_, args) => Room.find({ serviceId: args.id }),
+    roomsWithAccessGroup: async (_, args, { user }) => {
+      if (!user) {
+        throw new Error("Not Authenticated");
+      }
+      let list = await AccessGroupRoom.find({ accessGroupId: args.id });
+      return Room.find({
+        _id: { $in: list.map(item => item.roomId) }
+      });
+    }
   },
   Mutation: {
     addRoom: async (parent, room, { pubsub }) => {
@@ -54,15 +63,20 @@ const resolver = {
       if (_.isEmpty(room.accessGroupIds)) {
         return Room.findOneAndUpdate({ _id: room.id }, { ...room });
       } else {
-        AccessGroupRoom.deleteMany({
-          roomId: room.id
-        });
+        const list = await AccessGroupRoom.find({ roomId: room.id });
+
+        if (!_.isEmpty(list)) {
+          AccessGroupRoom.deleteMany({
+            roomId: room.id
+          });
+        }
         AccessGroupRoom.collection.insert(
-          accessGroupIds.map(accessGroupId => {
+          room.accessGroupIds.map(accessGroupId => {
             return { roomId: room.id, accessGroupId: accessGroupId };
           })
         );
         delete room.accessGroupIds;
+        console.log("room efter lite saker", room);
         return Room.findOneAndUpdate(
           { _id: room.id },
           { ...room },

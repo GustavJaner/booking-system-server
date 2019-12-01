@@ -3,8 +3,8 @@ const { Schema, model } = require("mongoose");
 const UserSchema = new Schema({
   name: String,
   email: String,
-  token: String,
   accessGroupId: String,
+  password: String
 });
 
 UserSchema.method("toJSON", function() {

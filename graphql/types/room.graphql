@@ -14,6 +14,7 @@ type Query {
   rooms: [Room]
   room(id: ID!): Room
   roomByService(id: ID!): [Room]
+  roomsWithAccessGroup(id: ID!): [Room]
 }
 
 type Mutation {
@@ -37,6 +38,6 @@ type Mutation {
     description: String
     serviceId: ID
     id: ID!
-    accessGroupIds: [ID!]
+    accessGroupIds: [ID]
   ): Room
 }

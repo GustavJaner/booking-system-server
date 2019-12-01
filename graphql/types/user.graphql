@@ -2,27 +2,22 @@ type User {
   id: ID!
   name: String
   email: String
-  token: String # Todo
   accessGroup: AccessGroup
 }
 
 type Query {
   users: [User!]!
+  userWithAccess: String
 }
 
 type Mutation {
   addUser(
     name: String!
     email: String!
-    token: String!
-    accessGroupId: ID!
+    accessGroupId: ID
+    password: String!
   ): User
   removeUser(id: ID!): Boolean
-  updateUser(
-    id: ID!
-    name: String
-    email: String
-    token: String
-    accessGroupId: ID
-  ): User
+  updateUser(id: ID!, name: String, email: String, accessGroupId: ID): User
+  login(email: String!, password: String!): LoginResponse
 }

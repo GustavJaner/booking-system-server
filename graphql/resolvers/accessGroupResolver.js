@@ -9,6 +9,7 @@ const resolver = {
   Mutation: {
     addAccessGroup: (parent, access) => {
       const newAccess = new Access(access);
+
       return newAccess.save();
     },
     updateAccessGroup: (parent, access) => {

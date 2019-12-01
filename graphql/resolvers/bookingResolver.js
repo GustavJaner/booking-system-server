@@ -10,7 +10,7 @@ const resolver = {
     bookingsByDate: (_, args) => Booking.find({ date: args.date })
   },
   Mutation: {
-    addBooking: (parent, booking, { pubsub }) => {
+    addBooking: (parent, booking, { user }) => {
       const newBooking = new Booking(booking);
       return newBooking.save();
     },

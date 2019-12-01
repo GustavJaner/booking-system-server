@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose");
 
 const accessSchema = new Schema({
-  description: String
+  name: String
 });
 accessSchema.method("toJSON", function() {
   const { __v, _id, ...object } = this.toObject();
