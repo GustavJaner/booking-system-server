@@ -23,7 +23,7 @@ type Mutation {
     end: String!
     duration: Int!
     name: String!
-    adress: String!
+    adress: String
     description: String
     serviceId: ID!
     accessGroupIds: [ID!]!

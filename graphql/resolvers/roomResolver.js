@@ -57,28 +57,25 @@ const resolver = {
         .catch(() => false);
     },
     updateRoom: async (parent, room, { pubsub }) => {
-      if (_.isEmpty(room.accessGroupIds)) {
-        return Room.findOneAndUpdate({ _id: room.id }, { ...room });
-      } else {
-        const list = await AccessGroupRoom.find({ roomId: room.id });
-
-        if (!_.isEmpty(list)) {
-          AccessGroupRoom.deleteMany({
-            roomId: room.id
-          });
-        }
+      const list = await AccessGroupRoom.find({ roomId: room.id });
+      if (!_.isEmpty(list)) {
+        let test = await AccessGroupRoom.deleteMany({
+          roomId: room.id
+        });
+      }
+      if (!_.isEmpty(room.accessGroupIds)) {
         AccessGroupRoom.collection.insert(
           room.accessGroupIds.map(accessGroupId => {
             return { roomId: room.id, accessGroupId: accessGroupId };
           })
         );
-        delete room.accessGroupIds;
-        return Room.findOneAndUpdate(
-          { _id: room.id },
-          { ...room },
-          { upsert: false }
-        );
       }
+      delete room.accessGroupIds;
+      return Room.findOneAndUpdate(
+        { _id: room.id },
+        { ...room },
+        { upsert: false }
+      );
     }
   },
   Room: {
