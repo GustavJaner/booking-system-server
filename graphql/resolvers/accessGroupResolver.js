@@ -22,7 +22,9 @@ const resolver = {
       await AccessGroupRoom.deleteMany({
         accessGroupId: access.id
       });
-      return Access.findByIdAndDelete({ _id: access.id });
+      return Access.findByIdAndDelete({ _id: access.id })
+        .then(() => true)
+        .catch(() => false);
     }
   },
   AccessGroup: {
