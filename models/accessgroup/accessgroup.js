@@ -1,13 +1,14 @@
 const { Schema, model } = require("mongoose");
 
-const accessSchema = new Schema({
+const AccessGroupSchema = new Schema({
   name: String
 });
-accessSchema.method("toJSON", function() {
+
+AccessGroupSchema.method("toJSON", function() {
   const { __v, _id, ...object } = this.toObject();
   object.id = _id;
   return object;
 });
-const Access = model("access", accessSchema);
+const AccessGroup = model("AccessGroup", AccessGroupSchema);
 
-module.exports = Access;
+module.exports = AccessGroup;

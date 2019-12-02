@@ -4,6 +4,7 @@ const AccessGroupRoom = require("../../models/accessgrouproom/accessgrouproom");
 const Access = require("../../models/accessgroup/accessgroup");
 const _ = require("lodash");
 
+
 const resolver = {
   Query: {
     rooms: () => Room.find({}),
@@ -87,8 +88,8 @@ const resolver = {
       return await Access.find({
         _id: { $in: list.map(item => item.accessGroupId) }
       });
-    }
-  }
+    },
+  },
 };
 
 module.exports = resolver;

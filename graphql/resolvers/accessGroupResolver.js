@@ -1,37 +1,43 @@
-const Access = require("../../models/accessgroup/accessgroup");
-const AccessGroupRoom = require("../../models/accessgrouproom/accessgrouproom");
+const AccessGroup = require("../../models/accessgroup/accessgroup");
 const Room = require("../../models/room/room");
+const User = require("../../models/user/user");
+const AccessGroupRoom = require("../../models/accessgrouproom/accessgrouproom");
+const AccessGroupUser = require("../../models/accessgroupuser/accessGroupUser");
+
 
 const resolver = {
   Query: {
-    accessGroups: () => Access.find({})
+    accessGroups: async () => await AccessGroup.find({}),
+    accessGroup: async (_parent, args) => await AccessGroup.findById({ _id: args.id }),
   },
   Mutation: {
-    addAccessGroup: (parent, access) => {
-      const newAccess = new Access(access);
-      return newAccess.save();
+    addAccessGroup: async (_, args) => {
+      const newAccessGroup = await (new AccessGroup(args)).save();
+
+      return newAccessGroup;
     },
-    updateAccessGroup: (parent, access) => {
-      return Access.findOneAndUpdate(
-        { _id: access.id },
-        { ...access },
-        { upsert: false }
+    removeAccessGroup: async (_, args) => {
+      AccessGroupRoom.deleteMany({ accessGroupId: args.id });
+      AccessGroupUser.deleteMany({ accessGroupId: args.id });
+
+      return await AccessGroup.findByIdAndDelete({ _id: args.id });
+    },
+    updateAccessGroup: async (_, args) => {
+      return await AccessGroup.findOneAndUpdate(
+        { _id: args.id },
+        { ...args },
       );
     },
-    removeAccessGroup: async (parent, access) => {
-      await AccessGroupRoom.deleteMany({
-        accessGroupId: access.id
-      });
-      return Access.findByIdAndDelete({ _id: access.id })
-        .then(() => true)
-        .catch(() => false);
-    }
   },
   AccessGroup: {
     async rooms(parent) {
       let list = await AccessGroupRoom.find({ accessGroupId: parent._id });
-      return await list.map(item => Room.findById({ _id: item.roomId }));
-    }
+      return list.map(async (item) => await Room.findById({ _id: item.roomId }));
+    },
+    async users(parent) {
+      let list = await AccessGroupUser.find({ accessGroupId: parent._id });
+      return list.map(async (item) => await User.findById({ _id: item.userId }));
+    },
   }
 };
 
