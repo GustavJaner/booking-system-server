@@ -3,11 +3,13 @@ type User {
   name: String
   email: String
   token: String # Todo
-  accessGroup: AccessGroup
+  # bookings: [Bookings]
+  accessGroups: [AccessGroup]
 }
 
 type Query {
   users: [User!]!
+  user(id: ID!): User
 }
 
 type Mutation {
@@ -15,14 +17,14 @@ type Mutation {
     name: String!
     email: String!
     token: String!
-    accessGroupId: ID!
+    accessGroupIds: [ID]
   ): User
-  removeUser(id: ID!): Boolean
+  removeUser(id: ID!): User
   updateUser(
     id: ID!
     name: String
     email: String
     token: String
-    accessGroupId: ID
+    accessGroupIds: [ID]
   ): User
 }

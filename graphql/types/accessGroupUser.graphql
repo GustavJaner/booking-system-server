@@ -1,0 +1,9 @@
+type AccessGroupUser {
+  id: ID!
+  user: User
+  accessGroup: AccessGroup
+}
+
+type Query {
+  accessGroupUsers: [AccessGroupUser!]!
+}
