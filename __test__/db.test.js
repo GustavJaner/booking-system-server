@@ -1,6 +1,7 @@
 const {MongoClient} = require('mongodb');
 const credentials = require('../credentials');
 const Booking = require('../models/booking/booking');
+const Room = require('../models/room/room');
 
 describe('Testing Database', () => {
   let connection;
@@ -22,9 +23,6 @@ describe('Testing Database', () => {
     await db.close();
   });
 
-  
-  //TODO Ska rensa 'testing' branchen i databasen för att sedan återskapas
-  //beforeEach(async () => {});
 
   test('Adding a new Booking to testing DB and checks that data is added and valid', async () => {
     const booking = db.collection('booking');
@@ -47,12 +45,27 @@ describe('Testing Database', () => {
     const bookingWithInvalidField = new Booking({date: 'Tisdag', gender: 'Male', nickname: 'tday' });
     await booking.insertOne(bookingWithInvalidField)
     const savedBookingWithInvalidField = await booking.find(bookingWithInvalidField);
-      
-    //Doesn't work for some reason, even though it has a unique id in DB.
-    //expect(savedBookingWithInvalidField._id).toBeDefined();
+
     expect(savedBookingWithInvalidField.gender).toBeUndefined();
     expect(savedBookingWithInvalidField.nickkname).toBeUndefined();
   });
+  /*
+  test('Adding a new Room to DB', async () => {
+    const room = db.collection('room');
+    const roomData = {start: "", end: "", duration: 30, name: "", adress: "", description: "mamma", serviceId: ""};
+    const newRoom = new Room(roomData);
+    await room.insertOne(newRoom)
+    const savedRoom = await room.findOne(newRoom);
+
+    expect(savedRoom._id).toBeDefined();
+    expect(savedRoom.start).toBe(roomData.start);
+    expect(savedRoom.end).toBe(roomData.end);
+    expect(savedRoom.duration).toBe(roomData.duration);
+    expect(savedRoom.name).toBe(roomData.name);
+    expect(savedRoom.adress).toBe(roomData.adress);
+    expect(savedRoom.description).toBe(roomData.description);
+
+  }); */
 
   test('should insert a testUser into collection', async () => {
   const users = db.collection('users');

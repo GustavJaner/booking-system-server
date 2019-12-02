@@ -40,6 +40,7 @@ describe('Testing Database + GraphQL', () => {
     expect(response).toMatchSnapshot();
   });
 
+  /*
   
   test('Add new post and see that it appears in DB', async () => {  
         const mutation = `
@@ -54,7 +55,6 @@ describe('Testing Database + GraphQL', () => {
 
 
     const request = await rp({method: 'POST', uri: API, body: {mutation}, json: true});
-    /*
     expect(request).toMatchSnapshot();
    
     const query = `
@@ -69,6 +69,6 @@ describe('Testing Database + GraphQL', () => {
 
     const response = await rp({method: 'POST', uri: API, body: {query}, json: true});
     expect(response).toMatchSnapshot();
-  */  
-  });
+    });
+ */  
 });
