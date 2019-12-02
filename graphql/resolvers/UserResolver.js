@@ -8,7 +8,6 @@ const resolver = {
     users: () => User.find({}),
     userWithAccess: (parent, args, { user }) => {
       // this if statement is our authentication check
-      console.log("args", args, "user", user);
       if (!user) {
         throw new Error("Not Authenticated");
       }
@@ -38,28 +37,27 @@ const resolver = {
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email: email });
 
-      console.log("input", user);
       if (_.isEmpty(user)) {
         throw new Error("Invalid Login");
       }
       console.log("bcrypt före", user);
       const passwordMatch = await bcrypt.compare(password, user.password);
-      console.log("bcrypt efter");
+      console.log("bcrypt efter", user);
       if (!passwordMatch) {
         throw new Error("Invalid Login");
       }
-      console.log("före jwt");
       const token = jwt.sign(
         {
           id: user._id,
-          username: user.email
+          username: user.email,
+          accessGroupId: user.accessGroupId
         },
         "my-secret-from-env-file-in-prod",
         {
           expiresIn: "30d" // token will expire in 30days
         }
       );
-      console.log("efter jwt", token, user);
+      console.log("token", token, "user", user);
 
       return {
         token: token,

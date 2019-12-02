@@ -1,6 +1,7 @@
 const Booking = require("../../models/booking/booking");
 const User = require("../../models/user/user");
 const Room = require("../../models/room/room");
+const AccessGroupRoom = require("../../models/accessgrouproom/accessgrouproom");
 
 const resolver = {
   Query: {
@@ -10,9 +11,27 @@ const resolver = {
     bookingsByDate: (_, args) => Booking.find({ date: args.date })
   },
   Mutation: {
-    addBooking: (parent, booking, { user }) => {
+    addBooking: async (parent, booking, { user }) => {
       const newBooking = new Booking(booking);
-      return newBooking.save();
+      if (!user) {
+        throw new Error("Not Authenticated");
+      }
+      //1. ta ut accessgroup för usern
+      let userBooking = await User.findById({ _id: user.id });
+      //2 kolla om accessgroupen har rätt till rummet
+      let roomaccesslist = await AccessGroupRoom.find({
+        accessGroupId: userBooking.accessGroupId
+      });
+      console.log(roomaccesslist, booking);
+      //3 boka om det är ok
+      if (
+        roomaccesslist.filter(item => item.roomId === booking.roomId).length ===
+        0
+      ) {
+        throw new Error("No access to the room!");
+      } else {
+        return newBooking.save();
+      }
     },
     removeBooking: (parent, booking, { pubsub }) => {
       return Booking.findByIdAndRemove({ _id: booking.id })

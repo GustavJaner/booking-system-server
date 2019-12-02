@@ -19,7 +19,6 @@ type Mutation {
     startTime: String!
     endTime: String!
     date: String!
-    userId: ID!
     roomId: ID!
   ): Booking
   removeBooking(id: ID!): Boolean
