@@ -9,6 +9,15 @@ type Query {
   post(id: ID!): Post
 }
 
+type Subscription {
+  postUpdated: PostUpdated
+}
+type PostUpdated {
+  added: Post
+  removed: Post
+  updated: Post
+}
+
 type Mutation {
   addPost(title: String!, content: String!): Post
   removePost(id: ID!): Boolean
