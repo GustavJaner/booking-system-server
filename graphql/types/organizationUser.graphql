@@ -1,0 +1,9 @@
+type OrganizationUser {
+  id: ID!
+  user: User
+  organization: Organization
+}
+
+type Query {
+  organizationUsers: [OrganizationUser!]!
+}

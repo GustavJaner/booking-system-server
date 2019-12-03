@@ -1,0 +1,24 @@
+type Organization {
+  id: ID!
+  name: String
+  description: String
+  users: [User]
+  admins: [User] # users that are a part of the admin AG
+  rooms: [Room]
+  bookings: [Booking]
+  services: [Service]
+  accessGroups: [AccessGroup]
+}
+
+type Query {
+  organizations: [Organization!]!
+  organization(id: ID!): Organization
+}
+
+type Mutation {
+  addOrganization(
+    name: String!
+    description: String
+    adminId: ID!
+  ): Organization
+}
