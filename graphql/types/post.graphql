@@ -20,6 +20,6 @@ type PostUpdated {
 
 type Mutation {
   addPost(title: String!, content: String!): Post
-  removePost(id: ID!): Boolean
+  removePost(id: ID!): Post
   updatePost(id: ID!, title: String, content: String): Post
 }

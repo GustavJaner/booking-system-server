@@ -1,11 +1,25 @@
 const Post = require("../../models/post/post");
-const POST_UPDATED = "";
+const POST_UPDATED = "POST_UPDATED";
 const resolver = {
   Query: {
-    posts: () => Post.find({}),
+    posts: async () => {
+      try {
+        let result = await Post.find({});
+        if (result) {
+          return result;
+        }
+        throw new Error();
+      } catch {
+        throw new Error("Query Posts failed");
+      }
+    },
     post: async (_, args) => {
       try {
-        return await Post.findById({ _id: args.id });
+        let result = await Post.findById({ _id: args.id });
+        if (result) {
+          return result;
+        }
+        throw new Error();
       } catch {
         throw new Error("Query Post failed");
       }
@@ -15,11 +29,16 @@ const resolver = {
     addPost: async (parent, post, { pubsub }) => {
       const { title, content } = post;
       const newPost = new Post({ title, content });
-
-      const createdPost = await newPost.save();
-      pubsub.publish(POST_UPDATED, { postUpdated: { added: createdPost } });
-
-      return createdPost;
+      try {
+        const createdPost = await newPost.save();
+        if (createdPost) {
+          pubsub.publish(POST_UPDATED, { postUpdated: { added: createdPost } });
+          return createdPost;
+        }
+        throw new Error();
+      } catch {
+        throw new Error("Add Post failed");
+      }
     },
     removePost: async (parent, post, { pubsub }) => {
       const { id } = post;
@@ -28,22 +47,29 @@ const resolver = {
       });
       try {
         let result = await Post.findByIdAndRemove({ _id: id });
-        console.log("result", result);
         if (result) {
-          return true;
+          return result;
         }
-        throw new Error("Post does not exist in DB");
+        throw new Error();
       } catch {
         throw new Error("Remove post failed");
       }
     },
-    updatePost: (parent, post, { pubsub }) => {
-      pubsub.publish(POST_UPDATED, { postUpdated: { updated: post } });
-      return Post.findOneAndUpdate(
-        { _id: post.id },
-        { ...post },
-        { upsert: false }
-      );
+    updatePost: async (parent, post, { pubsub }) => {
+      try {
+        let result = await Post.findOneAndUpdate(
+          { _id: post.id },
+          { ...post },
+          { upsert: false }
+        );
+        if (result) {
+          pubsub.publish(POST_UPDATED, { postUpdated: { updated: post } });
+          return result;
+        }
+        throw new Error();
+      } catch {
+        throw new Error("Remove post failed");
+      }
     }
   }
 };
