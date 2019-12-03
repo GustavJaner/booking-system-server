@@ -20,7 +20,10 @@ const resolver = {
       AccessGroupRoom.deleteMany({ accessGroupId: args.id });
       AccessGroupUser.deleteMany({ accessGroupId: args.id });
 
-      return await AccessGroup.findByIdAndDelete({ _id: args.id });
+      // return await AccessGroup.findByIdAndDelete({ _id: args.id });
+      return AccessGroup.findByIdAndDelete({ _id: args.id })
+        .then(() => true)
+        .catch(() => false);
     },
     updateAccessGroup: async (_, args) => {
       return await AccessGroup.findOneAndUpdate(

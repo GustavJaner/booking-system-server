@@ -12,6 +12,6 @@ type Query {
 
 type Mutation {
   addAccessGroup(name: String!): AccessGroup
-  removeAccessGroup(id: ID!): AccessGroup
+  removeAccessGroup(id: ID!): Boolean
   updateAccessGroup(id: ID!, name: String!): AccessGroup
 }
