@@ -8,9 +8,9 @@ const _ = require("lodash");
 const resolver = {
   Query: {
     rooms: () => Room.find({}),
-    room: async (_, args) => Room.findById({ _id: args.id }),
-    roomByService: (_, args) => Room.find({ serviceId: args.id }),
-    roomsWithAccessGroup: async (_, args, { user }) => {
+    room: async (_parent, args) => Room.findById({ _id: args.id }),
+    roomByService: (_parent, args) => Room.find({ serviceId: args.id }),
+    roomsWithAccessGroup: async (_parent, args) => {
       let list = await AccessGroupRoom.find({ accessGroupId: args.id });
       return Room.find({
         _id: { $in: list.map(item => item.roomId) }
@@ -18,66 +18,49 @@ const resolver = {
     }
   },
   Mutation: {
-    addRoom: async (parent, room, { pubsub }) => {
-      const {
-        start,
-        end,
-        duration,
-        name,
-        adress,
-        description,
-        serviceId,
-        accessGroupIds
-      } = room;
-      const newRoom = new Room({
-        start,
-        end,
-        duration,
-        name,
-        adress,
-        description,
-        serviceId
-      });
-      const createdRoom = await newRoom.save();
+    addRoom: async (_parent, args) => {
+      const newRoom = await (new Room(args)).save();
 
-      AccessGroupRoom.collection.insert(
-        accessGroupIds.map(accessGroupId => ({
-          roomId: createdRoom.id,
-          accessGroupId: accessGroupId
-        }))
-      );
-
-      return createdRoom;
-    },
-    removeRoom: async (parent, room, { pubsub }) => {
-      await AccessGroupRoom.deleteMany({
-        roomId: room.id
-      });
-      return Room.findByIdAndRemove({ _id: room.id })
-        .then(() => true)
-        .catch(() => false);
-    },
-    updateRoom: async (parent, room, { pubsub }) => {
-      const list = await AccessGroupRoom.find({ roomId: room.id });
-      if (!_.isEmpty(list)) {
-        let test = await AccessGroupRoom.deleteMany({
-          roomId: room.id
-        });
-      }
-      if (!_.isEmpty(room.accessGroupIds)) {
-        AccessGroupRoom.collection.insert(
-          room.accessGroupIds.map(accessGroupId => {
-            return { roomId: room.id, accessGroupId: accessGroupId };
-          })
+      // if Access Group IDs are given
+      if (!_.isEmpty(args.accessGroupIds)) {
+        await AccessGroupRoom.collection.insert(
+          args.accessGroupIds.map(accessGroupId => ({
+            roomId: newRoom.id,
+            accessGroupId: accessGroupId
+          }))
         );
       }
-      delete room.accessGroupIds;
-      return Room.findOneAndUpdate(
-        { _id: room.id },
-        { ...room },
-        { upsert: false }
+
+      return newRoom;
+    },
+    removeRoom: async (_parent, args) => {
+      AccessGroupRoom.deleteMany({ roomId: args.id });
+
+      return await Room.findByIdAndRemove({ _id: args.id })
+    },
+    updateRoom: async (_parent, args) => {
+      console.log(args);
+      // Check if the accessGroupIds argument is given:
+      if (!_.isUndefined(args.accessGroupIds)) {
+        console.log(args.accessGroupIds);
+        await AccessGroupRoom.deleteMany({ roomId: args.id });
+        
+        // If given a non-empty list, insert new room accesses
+        if (!_.isEmpty(args.accessGroupIds)) {
+          await AccessGroupRoom.collection.insert(
+            args.accessGroupIds.map(accessGroupId => ({
+              roomId: args.id,
+              accessGroupId: accessGroupId,
+            })),
+          );
+        }
+      };
+      
+      return await Room.findOneAndUpdate(
+        { _id: args.id },
+        { ...args },
       );
-    }
+    },
   },
   Room: {
     service(parent) {
@@ -85,7 +68,7 @@ const resolver = {
     },
     async accessGroups(parent) {
       let list = await AccessGroupRoom.find({ roomId: parent._id });
-      return await Access.find({
+      return Access.find({
         _id: { $in: list.map(item => item.accessGroupId) }
       });
     },

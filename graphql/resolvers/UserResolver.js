@@ -26,7 +26,7 @@ const resolver = {
       return newUser;
     },
     removeUser: async (_parent, args) => {
-      await AccessGroupUser.deleteMany({ userId: args.id });
+      AccessGroupUser.deleteMany({ userId: args.id });
 
       return await User.findByIdAndDelete({ _id: args.id });
     },
