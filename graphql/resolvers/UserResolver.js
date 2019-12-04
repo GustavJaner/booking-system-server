@@ -1,12 +1,19 @@
 const User = require("../../models/user/user");
 const Access = require("../../models/accessgroup/accessgroup");
 
-
 const resolver = {
   Query: {
-    users: () => User.find({}),
+    users: () => User.find({})
   },
   Mutation: {
+    login: async (parent, { username, password }, context) => {
+      const { user } = await context.authenticate("graphql-local", {
+        username,
+        password
+      });
+      context.login(user);
+      return { user };
+    },
     addUser: async (_, args) => {
       const newUser = new User(args);
       const createdUser = await newUser.save();
@@ -23,13 +30,13 @@ const resolver = {
         { ...args },
         { upsert: false }
       );
-    },
+    }
   },
   User: {
     accessGroup(parent) {
       return Access.findById({ _id: parent.accessGroupId });
     }
-  },
+  }
 };
 
 module.exports = resolver;

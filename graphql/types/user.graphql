@@ -1,28 +1,19 @@
 type User {
   id: ID!
-  name: String
-  email: String
-  token: String # Todo
+  username: String!
   accessGroup: AccessGroup
 }
 
 type Query {
   users: [User!]!
 }
+type AuthPayLoad {
+  user: User
+}
 
 type Mutation {
-  addUser(
-    name: String!
-    email: String!
-    token: String!
-    accessGroupId: ID!
-  ): User
-  removeUser(id: ID!): Boolean
-  updateUser(
-    id: ID!
-    name: String
-    email: String
-    token: String
-    accessGroupId: ID
-  ): User
+  addUser(username: String!, password: String!, accessGroup: ID): User
+  login(username: String!, password: String!): AuthPayLoad
+  removeUser(id: ID!): User
+  updateUser(id: ID!): User
 }

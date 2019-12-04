@@ -17,6 +17,7 @@
     "apollo-link-http": "^1.5.16",
     "apollo-server": "^2.9.12",
     "apollo-server-express": "^2.9.12",
+    "bcrypt": "^3.0.7",
     "express": "^4.17.1",
     "graphql": "^14.5.8",
     "graphql-passport": "^0.5.0",
@@ -24,8 +25,10 @@
     "lodash": "^4.17.15",
     "merge-graphql-schemas": "^1.7.3",
     "moment": "^2.24.0",
-    "mongoose": "^5.7.12",
+    "mongoose": "^5.7.13",
     "nodemon": "^2.0.1",
-    "passport": "^0.4.0"
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^5.0.1"
   }
 }

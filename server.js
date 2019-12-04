@@ -4,27 +4,34 @@ const http = require("http");
 const { ApolloServer } = require("apollo-server-express");
 const passport = require("passport");
 const { GraphQLLocalStrategy, buildContext } = require("graphql-passport");
-
+const User = require("./models/user/user");
 const mongoose = require("mongoose");
 const typeDefs = require("./graphql/typeDefs");
 const resolvers = require("./graphql/resolvers");
 const credentials = require("./credentials");
 
 passport.use(
-  new GraphQLLocalStrategy((email, password, done) => {
-    const users = User.getUsers();
-    const matchingUser = users.find(
-      user => email === user.email && password === user.password
-    );
-    const error = matchingUser ? null : new Error("no matching user");
-    done(error, matchingUser);
+  new GraphQLLocalStrategy((username, password, done) => {
+    let matchingUser = User.findOne({ username: username }, (err, user) => {
+      if (err) {
+        done("user missing ", null);
+      }
+      user.comparePassword(password, (err, isMatch) => {
+        if (err) {
+          done("password is wrong", null);
+        } else if (isMatch) {
+          done(null, matchingUser);
+        }
+      });
+    });
   })
 );
 
 mongoose
   .connect(credentials.MONGO_URI, {
     useUnifiedTopology: true,
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useCreateIndex: true
   })
   .then(() => console.log("DB connected"))
   .catch(err => console.log(err));
