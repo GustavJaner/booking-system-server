@@ -1,11 +1,12 @@
 type User {
   id: ID!
   username: String!
-  accessGroup: AccessGroup
+  accessGroups: [AccessGroup]
 }
 
 type Query {
   users: [User!]!
+  user(id: ID!): User
 }
 type AuthPayLoad {
   user: User
@@ -16,4 +17,7 @@ type Mutation {
   login(username: String!, password: String!): AuthPayLoad
   removeUser(id: ID!): User
   updateUser(id: ID!): User
+  addUser(username: String!, password: String!, accessGroupIds: [ID]): User
+  removeUser(id: ID!): User
+  updateUser(id: ID!, username: String, accessGroupIds: [ID]): User
 }

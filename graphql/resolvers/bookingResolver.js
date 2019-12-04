@@ -7,6 +7,7 @@ const resolver = {
     bookings: () => Booking.find({}),
     booking: () => (_, args) => Booking.findById({ id_: args.id }),
     bookingsByRoom: (_, args) => Booking.find({ roomId: args.id }),
+    bookingsByUser: (_, args) => Booking.find({ userId: args.id }),
     bookingsByDate: (_, args) => Booking.find({ date: args.date })
   },
   Mutation: {

@@ -11,6 +11,7 @@ type Query {
   bookings: [Booking]
   booking(id: ID!): Booking
   bookingsByRoom(id: ID!): [Booking]
+  bookingsByUser(id: ID!): [Booking]
   bookingsByDate(date: String!): [Booking]
 }
 

@@ -9,8 +9,17 @@ type Query {
   post(id: ID!): Post
 }
 
+type Subscription {
+  postUpdated: PostUpdated
+}
+type PostUpdated {
+  added: Post
+  removed: Post
+  updated: Post
+}
+
 type Mutation {
   addPost(title: String!, content: String!): Post
-  removePost(id: ID!): Boolean
+  removePost(id: ID!): Post
   updatePost(id: ID!, title: String, content: String): Post
 }

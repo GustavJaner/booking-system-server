@@ -23,13 +23,14 @@ type Mutation {
     end: String!
     duration: Int!
     name: String!
-    adress: String!
+    adress: String
     description: String
     serviceId: ID!
     accessGroupIds: [ID!]!
   ): Room
-  removeRoom(id: ID!): Boolean
+  removeRoom(id: ID!): Room
   updateRoom(
+    id: ID!
     start: String
     end: String
     duration: Int
@@ -37,7 +38,6 @@ type Mutation {
     adress: String
     description: String
     serviceId: ID
-    id: ID!
-    accessGroupIds: [ID!]
+    accessGroupIds: [ID]
   ): Room
 }
