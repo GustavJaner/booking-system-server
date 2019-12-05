@@ -6,7 +6,12 @@ const AccessGroupUser = require("../../models/accessgroupuser/accessGroupUser");
 
 const resolver = {
   Query: {
-    accessGroups: async () => await AccessGroup.find({}),
+    accessGroups: async (parent, booking, { user }) => {
+      if (user.admin) {
+        return AccessGroup.find({});
+      }
+      throw new Error("not authorized");
+    },
     accessGroup: async (_parent, args) =>
       await AccessGroup.findById({ _id: args.id })
   },

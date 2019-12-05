@@ -1,24 +1,27 @@
 type User {
   id: ID!
-  name: String
-  email: String
-  token: String # Todo
-  # bookings: [Bookings]
+  username: String
   accessGroups: [AccessGroup]
+  role: Role
+}
+enum Role {
+  ADMIN
+  USER
+  UNKNOWN
 }
 
 type Query {
   users: [User!]!
   user(id: ID!): User
 }
+type LoginResponse {
+  user: User
+  token: String
+}
 
 type Mutation {
-  addUser(
-    name: String!
-    email: String!
-    token: String!
-    accessGroupIds: [ID]
-  ): User
+  login(username: String!, password: String!): LoginResponse
+  addUser(username: String!, password: String!): User
   removeUser(id: ID!): User
   updateUser(
     id: ID!
