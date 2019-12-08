@@ -5,11 +5,11 @@ const { ApolloServer } = require("apollo-server-express");
 const mongoose = require("mongoose");
 const typeDefs = require("./graphql/typeDefs");
 const resolvers = require("./graphql/resolvers");
-const credentials = require('./credentials');
+// const credentials = require('./credentials');
 
 
 mongoose
-  .connect(credentials.MONGO_URI, { useUnifiedTopology: true, useNewUrlParser: true })
+  .connect(process.env.MONGO_URI_DEV, { useUnifiedTopology: true, useNewUrlParser: true })
   .then(() => console.log("DB connected"))
   .catch(err => console.log(err));
 
@@ -28,6 +28,8 @@ const httpServer = http.createServer(app);
 server.installSubscriptionHandlers(httpServer);
 
 const port = process.env.PORT || 5000;
+
+console.log(process.env.MONGO_URI_DEV);
 
 httpServer.listen(port, () => {
   console.log(
