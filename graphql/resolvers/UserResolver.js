@@ -10,9 +10,10 @@ const bcrypt = require("bcrypt");
 const resolver = {
   Query: {
     users: async (_, __, { user }) => {
+      console.log("user", user);
       if (!user) throw new Error("not authorized");
       if (user.admin) {
-        await User.find({});
+        return await User.find({});
       }
       throw new Error("not authorized");
     },
