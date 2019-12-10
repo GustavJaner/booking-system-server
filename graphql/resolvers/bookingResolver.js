@@ -16,9 +16,7 @@ const resolver = {
       return newBooking.save();
     },
     removeBooking: (parent, booking, { pubsub }) => {
-      return Booking.findByIdAndRemove({ _id: booking.id })
-        .then(() => true)
-        .catch(() => false);
+      return Booking.findByIdAndRemove({ _id: booking.id });
     },
     updateBooking: (parent, booking, { pubsub }) => {
       return Booking.findOneAndUpdate(

@@ -9,7 +9,13 @@ const bcrypt = require("bcrypt");
 
 const resolver = {
   Query: {
-    users: async () => await User.find({}),
+    users: async (_, __, { user }) => {
+      if (!user) throw new Error("not authorized");
+      if (user.admin) {
+        await User.find({});
+      }
+      throw new Error("not authorized");
+    },
     user: async (_parent, args) => await User.findById({ _id: args.id })
   },
   Mutation: {
@@ -36,7 +42,6 @@ const resolver = {
           expiresIn: "1d" // token will expire in 1day
         }
       );
-      console.log("user", user, "token", token);
       return { user, token };
     },
     addUser: async (_parent, args) => {
@@ -54,10 +59,14 @@ const resolver = {
       }
       return createdUser;
     },
-    removeUser: async (_parent, args) => {
-      AccessGroupUser.deleteMany({ userId: args.id });
+    removeUser: async (_parent, args, { user }) => {
+      if (!user) throw new Error("not authorized");
+      if (user.admin) {
+        AccessGroupUser.deleteMany({ userId: args.id });
 
-      return await User.findByIdAndDelete({ _id: args.id });
+        return await User.findByIdAndDelete({ _id: args.id });
+      }
+      throw new Error("not authorized");
     },
     updateUser: async (_parent, args) => {
       console.log("args", args);

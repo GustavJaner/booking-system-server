@@ -23,7 +23,7 @@ type Mutation {
     userId: ID!
     roomId: ID!
   ): Booking
-  removeBooking(id: ID!): Boolean
+  removeBooking(id: ID!): Booking
   updateBooking(
     id: ID!
     startTime: String
