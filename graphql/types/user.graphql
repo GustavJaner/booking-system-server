@@ -2,12 +2,7 @@ type User {
   id: ID!
   username: String
   accessGroups: [AccessGroup]
-  role: Role
-}
-enum Role {
-  ADMIN
-  USER
-  UNKNOWN
+  role: [String]
 }
 
 type Query {

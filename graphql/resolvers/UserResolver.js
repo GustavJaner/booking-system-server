@@ -1,7 +1,7 @@
 const _ = require("lodash");
 const User = require("../../models/user/user");
 const AccessGroup = require("../../models/accessgroup/accessgroup");
-const AccessGroupUser = require("../../models/accessgroupuser/accessGroupUser");
+const AccessGroupUser = require("../../models/accessGroupUser/accessgroupuser");
 const verifypass = require("../../models/user/VerifyPass");
 const jwt = require("jsonwebtoken");
 const { JWTSecret } = require("../../index");
@@ -24,26 +24,19 @@ const resolver = {
       if (!passwordMatch) {
         throw new Error("no password match");
       }
-      let list = await AccessGroupUser.find({ userId: user.id });
-
-      const accessgroups = await AccessGroup.find({
-        _id: { $in: list.map(item => item.accessGroupId) }
-      });
-      let accessGroupIds = accessgroups.map(group => group.id);
 
       const token = jwt.sign(
         {
           id: user._id,
           username: username,
-          admin: user.role.includes("admin"),
-          accessGroupIds: accessGroupIds
+          admin: user.role.includes("admin")
         },
         JWTSecret,
         {
-          expiresIn: "15d" // token will expire in 30days
+          expiresIn: "1d" // token will expire in 1day
         }
       );
-      console.log(jwt.verify(token, JWTSecret));
+      console.log("user", user, "token", token);
       return { user, token };
     },
     addUser: async (_parent, args) => {

@@ -3,6 +3,9 @@ const Service = require("../../models/service/service");
 const AccessGroupRoom = require("../../models/accessgrouproom/accessgrouproom");
 const Access = require("../../models/accessgroup/accessgroup");
 const _ = require("lodash");
+const {
+  AccessGroupUser
+} = require("../../models/accessGroupUser/accessgroupuser");
 
 const resolver = {
   Query: {
@@ -10,14 +13,30 @@ const resolver = {
       if (!user) {
         throw new Error("not authorized");
       }
-      if (user.admin) {
-        return room.find({});
-      }
-      if (_.isEmpty(user.accessGroupIds)) {
+      /*if (user.admin) {
+        return Room.find({});
+      }*/
+      /*let accessgroupuser = await AccessGroupUser.find({ userId: user.id });
+      console.log("accessgroupuser:", accessgroupuser);
+      let accessgrouproom = await AccessGroupRoom.find({
+        accessGroupId: { $in: accessgroupuser.map(item => item.accessGroupId) }
+      });
+      console.log("accessgrouproom", accessgrouproom);
+*/
+      let rooms = Room.find({
+        _id: { $in: accessgrouproom.map(item => item.roomId) }
+      });
+      console.log("rooms", rooms);
+
+      if (_.isEmpty(list)) {
         throw new Error("Missing access, talk with admin!");
       }
+      const accessgroups = await AccessGroup.find({
+        _id: { $in: list.map(item => item.accessGroupId) }
+      });
+
       let list = await AccessGroupRoom.find({
-        accessGroupId: { $in: user.accessGroupIds.map(item => item) }
+        accessGroupId: { $in: access.map(item => item) }
       });
       return Room.find({
         _id: { $in: list.map(item => item.roomId) }
