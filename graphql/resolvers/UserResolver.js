@@ -1,7 +1,7 @@
 const _ = require("lodash");
 const User = require("../../models/user/user");
 const AccessGroup = require("../../models/accessgroup/accessgroup");
-const AccessGroupUser = require("../../models/accessGroupUser/accessgroupuser");
+const AccessGroupUser = require("../../models/accessGroupUser/accessGroupUser");
 const verifypass = require("../../models/user/VerifyPass");
 const jwt = require("jsonwebtoken");
 const { JWTSecret } = require("../../index");

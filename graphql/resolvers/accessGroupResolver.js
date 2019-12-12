@@ -2,7 +2,8 @@ const AccessGroup = require("../../models/accessgroup/accessgroup");
 const Room = require("../../models/room/room");
 const User = require("../../models/user/user");
 const AccessGroupRoom = require("../../models/accessgrouproom/accessgrouproom");
-const AccessGroupUser = require("../../models/accessGroupUser/accessgroupuser");
+const AccessGroupUser = require("../../models/accessGroupUser/accessGroupUser");
+
 
 const resolver = {
   Query: {

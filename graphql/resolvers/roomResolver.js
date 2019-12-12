@@ -3,7 +3,7 @@ const Service = require("../../models/service/service");
 const AccessGroupRoom = require("../../models/accessgrouproom/accessgrouproom");
 const Access = require("../../models/accessgroup/accessgroup");
 const _ = require("lodash");
-const AccessGroupUser = require("../../models/accessGroupUser/accessgroupuser");
+const AccessGroupUser = require("../../models/accessGroupUser/accessGroupUser");
 
 const getAccessGroupRoom = async user => {
   accessGroupUser = await AccessGroupUser.find({ userId: user.id });
