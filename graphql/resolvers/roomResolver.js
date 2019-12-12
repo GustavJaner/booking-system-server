@@ -32,7 +32,8 @@ const resolver = {
       if (user.admin) {
         return Room.find({});
       }
-      let accessGroupRoom = getAccessGroupRoom(user);
+      
+      let accessGroupRoom = await getAccessGroupRoom(user);
 
       return await Room.find({
         _id: { $in: accessGroupRoom.map(item => item.roomId) }
