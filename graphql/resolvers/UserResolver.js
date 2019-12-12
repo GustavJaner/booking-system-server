@@ -44,7 +44,7 @@ const resolver = {
         },
         JWTSecret,
         {
-          expiresIn: "1d" // token will expire in 1day
+          expiresIn: "0.3h" // token will expire in 1day
         }
       );
       return { user, token };
