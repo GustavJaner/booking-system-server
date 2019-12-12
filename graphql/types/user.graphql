@@ -8,6 +8,7 @@ type User {
 type Query {
   users: [User!]!
   user(id: ID!): User
+  isAdmin: Boolean
 }
 type LoginResponse {
   user: User
@@ -18,9 +19,5 @@ type Mutation {
   login(username: String!, password: String!): LoginResponse
   addUser(username: String!, password: String!): User
   removeUser(id: ID!): User
-  updateUser(
-    id: ID!
-    username: String
-    accessGroupIds: [ID]
-  ): User
+  updateUser(id: ID!, username: String, accessGroupIds: [ID]): User
 }

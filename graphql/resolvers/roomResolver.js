@@ -32,7 +32,7 @@ const resolver = {
       if (user.admin) {
         return Room.find({});
       }
-      
+
       let accessGroupRoom = await getAccessGroupRoom(user);
 
       return await Room.find({

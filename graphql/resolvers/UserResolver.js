@@ -16,7 +16,12 @@ const resolver = {
       }
       throw new Error("not authorized");
     },
-    user: async (_parent, args) => await User.findById({ _id: args.id })
+    user: async (_parent, args) => await User.findById({ _id: args.id }),
+    isAdmin: async (_, __, { user }) => {
+      if (!user) return false;
+      if (user.admin) return true;
+      return false;
+    }
   },
   Mutation: {
     login: async (parent, { username, password }) => {
