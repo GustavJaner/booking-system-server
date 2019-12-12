@@ -20,9 +20,7 @@ type Mutation {
   removeUser(id: ID!): User
   updateUser(
     id: ID!
-    name: String
-    email: String
-    token: String
+    username: String
     accessGroupIds: [ID]
   ): User
 }
