@@ -10,7 +10,6 @@ const bcrypt = require("bcrypt");
 const resolver = {
   Query: {
     users: async (_, __, { user }) => {
-      console.log("user", user);
       if (!user) throw new Error("not authorized");
       if (user.admin) {
         return await User.find({});
@@ -70,7 +69,6 @@ const resolver = {
       throw new Error("not authorized");
     },
     updateUser: async (_parent, args) => {
-      console.log("args", args);
       // Check if the accessGroupIds argument is given:
       if (!_.isUndefined(args.accessGroupIds)) {
         await AccessGroupUser.deleteMany({ userId: args.id });
@@ -92,7 +90,6 @@ const resolver = {
   User: {
     async accessGroups(parent) {
       let list = await AccessGroupUser.find({ userId: parent._id });
-      console.log(parent);
       if (_.isEmpty(list)) {
         return [];
       }

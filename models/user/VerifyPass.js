@@ -1,10 +1,8 @@
 const User = require("./user");
 const GetUser = (username, password) =>
   User.findOne({ username: username }, (err, user) => {
-    console.log("username", username, "password", password, "user", user);
     if (user) {
       user.comparePassword(password, (err, isMatch) => {
-        console.log("err", err, "ismatch", isMatch);
         if (isMatch) {
           return { error: null, user };
         } else if (err) {

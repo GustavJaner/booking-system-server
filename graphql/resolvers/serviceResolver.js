@@ -4,8 +4,8 @@ const resolver = {
   Query: {
     services: (_, __, { user }) => {
       if (!user) throw new Error("not authorized");
-      if (user.admin) {
-        Service.find({});
+      if (user) {
+        return Service.find({});
       }
       throw new Error("not authorized");
     },
