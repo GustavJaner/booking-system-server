@@ -5,7 +5,7 @@ const AccessGroupUser = require("../../models/accessGroupUser/accessGroupUser");
 const verifypass = require("../../models/user/VerifyPass");
 const jwt = require("jsonwebtoken");
 const { JWTSecret } = require("../../index");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcrypt-nodejs");
 
 const resolver = {
   Query: {
