@@ -14,7 +14,6 @@ type Query {
   rooms: [Room]
   room(id: ID!): Room
   roomByService(id: ID!): [Room]
-  roomsWithAccessGroup(id: ID!): [Room]
 }
 
 type Mutation {

@@ -11,7 +11,7 @@ type Query {
   bookings: [Booking]
   booking(id: ID!): Booking
   bookingsByRoom(id: ID!): [Booking]
-  bookingsByUser(id: ID!): [Booking]
+  bookingsByUser: [Booking]
   bookingsByDate(date: String!): [Booking]
 }
 
@@ -20,16 +20,14 @@ type Mutation {
     startTime: String!
     endTime: String!
     date: String!
-    userId: ID!
     roomId: ID!
   ): Booking
-  removeBooking(id: ID!): Boolean
+  removeBooking(id: ID!): Booking
   updateBooking(
     id: ID!
     startTime: String
     endTime: String
     date: String!
-    userId: String
     roomId: String
   ): Booking
 }

@@ -7,18 +7,24 @@ const resolver = {
     bookings: () => Booking.find({}),
     booking: () => (_, args) => Booking.findById({ id_: args.id }),
     bookingsByRoom: (_, args) => Booking.find({ roomId: args.id }),
-    bookingsByUser: (_, args) => Booking.find({ userId: args.id }),
+    bookingsByUser: (_, args, { user }) => {
+      if (!user) {
+        throw new Error("not authorized");
+      }
+      return Booking.find({ userId: user.id });
+    },
     bookingsByDate: (_, args) => Booking.find({ date: args.date })
   },
   Mutation: {
-    addBooking: (parent, booking, { pubsub }) => {
-      const newBooking = new Booking(booking);
+    addBooking: (parent, booking, { user }) => {
+      if (!user) {
+        throw new Error("not authorized");
+      }
+      const newBooking = new Booking(...booking, { userId: user.id });
       return newBooking.save();
     },
     removeBooking: (parent, booking, { pubsub }) => {
-      return Booking.findByIdAndRemove({ _id: booking.id })
-        .then(() => true)
-        .catch(() => false);
+      return Booking.findByIdAndRemove({ _id: booking.id });
     },
     updateBooking: (parent, booking, { pubsub }) => {
       return Booking.findOneAndUpdate(

@@ -7,6 +7,7 @@ const bookingSchema = new Schema({
   userId: String,
   roomId: String
 });
+bookingSchema.index({ roomId: 1, date: 1, startTime: 1 }, { unique: true });
 
 bookingSchema.method("toJSON", function() {
   const { __v, _id, ...object } = this.toObject();

@@ -5,11 +5,27 @@ const { ApolloServer } = require("apollo-server-express");
 const mongoose = require("mongoose");
 const typeDefs = require("./graphql/typeDefs");
 const resolvers = require("./graphql/resolvers");
-const credentials = require('./credentials');
+const credentials = require("./credentials");
+const jwt = require("jsonwebtoken");
+const { JWTSecret } = require("./index");
 
+const getUserWithToken = token => {
+  try {
+    if (token) {
+      return jwt.verify(token, JWTSecret);
+    }
+    return null;
+  } catch (err) {
+    return null;
+  }
+};
 
 mongoose
-  .connect(credentials.MONGO_URI, { useUnifiedTopology: true, useNewUrlParser: true })
+  .connect(credentials.MONGO_URI, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+    createIndexes: true
+  })
   .then(() => console.log("DB connected"))
   .catch(err => console.log(err));
 
@@ -18,7 +34,12 @@ const pubsub = new PubSub();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: () => ({ pubsub })
+  context: ({ req }) => {
+    const tokenWithBearer = req.headers.authorization || "";
+    const token = tokenWithBearer.split(" ")[1];
+    const user = getUserWithToken(token);
+    return { pubsub, user };
+  }
 });
 
 const app = express();

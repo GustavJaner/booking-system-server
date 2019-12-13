@@ -10,6 +10,6 @@ type Query {
 
 type Mutation {
   addService(name: String!): Service
-  removeService(id: ID!): Boolean
+  removeService(id: ID!): Service
   updateService(id: ID!, name: String!): Service
 }
