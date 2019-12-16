@@ -1,0 +1,5 @@
+type BookingUpdate {
+  added: Booking
+  removed: Booking
+  updated: Booking
+}

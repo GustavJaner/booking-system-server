@@ -34,11 +34,17 @@ const pubsub = new PubSub();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: ({ req }) => {
+  context: async ({ req, connection }) => {
+    if (connection) {
+      return {
+        ...connection.context,
+        pubsub
+      };
+    }
     const tokenWithBearer = req.headers.authorization || "";
     const token = tokenWithBearer.split(" ")[1];
     const user = getUserWithToken(token);
-    return { pubsub, user };
+    return { user, pubsub };
   }
 });
 

@@ -1,3 +1,4 @@
 type Subscription {
   postUpdated: PostUpdated
+  bookingUpdate: BookingUpdate
 }
