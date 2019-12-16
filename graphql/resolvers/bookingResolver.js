@@ -1,6 +1,7 @@
 const Booking = require("../../models/booking/booking");
 const User = require("../../models/user/user");
 const Room = require("../../models/room/room");
+const BOOKING_UPDATE = "BOOKING_UPDATE";
 
 const resolver = {
   Query: {
@@ -15,18 +16,27 @@ const resolver = {
     },
     bookingsByDate: (_, args) => Booking.find({ date: args.date })
   },
+  Subscription: {
+    bookingUpdate: {
+      subscribe: (_, args, { pubsub }) => pubsub.asyncIterator([BOOKING_UPDATE])
+    }
+  },
   Mutation: {
-    addBooking: (parent, booking, { user }) => {
+    addBooking: async (parent, args, { user, pubsub }) => {
       if (!user) {
         throw new Error("not authorized");
       }
-      const newBooking = new Booking(...booking, { userId: user.id });
-      return newBooking.save();
+      const newBooking = await new Booking({ ...args, userId: user.id }).save();
+      console.log();
+      pubsub.publish(BOOKING_UPDATE, { bookingUpdate: { added: newBooking } });
+      return newBooking;
     },
     removeBooking: (parent, booking, { pubsub }) => {
+      pubsub.publish(BOOKING_UPDATE, { bookingUpdate: { removed: booking } });
       return Booking.findByIdAndRemove({ _id: booking.id });
     },
     updateBooking: (parent, booking, { pubsub }) => {
+      pubsub.publish(BOOKING_UPDATE, { bookingUpdate: { updated: booking } });
       return Booking.findOneAndUpdate(
         { _id: booking.id },
         { ...booking },

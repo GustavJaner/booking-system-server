@@ -15,6 +15,16 @@ type Query {
   bookingsByDate(date: String!): [Booking]
 }
 
+type Subscription {
+  bookingUpdate: BookingUpdate
+}
+
+type BookingUpdate {
+  added: Booking
+  removed: Booking
+  updated: Booking
+}
+
 type Mutation {
   addBooking(
     startTime: String!
