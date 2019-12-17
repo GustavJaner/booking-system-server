@@ -21,6 +21,9 @@ const resolver = {
       if (!user) return false;
       if (user.admin) return true;
       return false;
+    },
+    tokenIsValid: (_, __, { user }) => {
+      return user ? true : false;
     }
   },
   Mutation: {

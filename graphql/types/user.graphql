@@ -9,6 +9,7 @@ type Query {
   users: [User!]!
   user(id: ID!): User
   isAdmin: Boolean
+  tokenIsValid: Boolean
 }
 type LoginResponse {
   user: User
