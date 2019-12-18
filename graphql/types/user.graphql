@@ -18,7 +18,12 @@ type LoginResponse {
 
 type Mutation {
   login(username: String!, password: String!): LoginResponse
-  addUser(username: String!, password: String!): User
+  addUser(
+    username: String!
+    password: String!
+    role: [String]
+    accessGroupIds: [ID]
+  ): User
   removeUser(id: ID!): User
-  updateUser(id: ID!, username: String, accessGroupIds: [ID]): User
+  updateUser(id: ID!, accessGroupIds: [ID], role: [String]): User
 }
