@@ -2,31 +2,31 @@ const Service = require("../../models/service/service");
 
 const resolver = {
   Query: {
-    services: (_, __, { user }) => {
+    services: (_parent, _args, { user }) => {
       if (!user) throw new Error("not authorized");
       if (user) {
         return Service.find({});
       }
       throw new Error("not authorized");
     },
-    service: (_, args) => Service.findById({ _id: args.id })
+    service: (_parent, args) => Service.findById({ _id: args.id })
   },
   Mutation: {
-    addService: (parent, service, { user }) => {
+    addService: (_parent, service, { user }) => {
       if (!user) throw new Error("not authorized");
       if (user.admin) {
         return new Service({ name: service.name }).save();
       }
       throw new Error("not authorized");
     },
-    removeService: (parent, service, { user }) => {
+    removeService: (_parent, service, { user }) => {
       if (!user) throw new Error("not authorized");
       if (user.admin) {
         return Service.findByIdAndRemove({ _id: service.id });
       }
       throw new Error("not authorized");
     },
-    updateService: (parent, service, { pubsub }) => {
+    updateService: (_parent, service, { user }) => {
       if (!user) throw new Error("not authorized");
       if (user.admin) {
         return Service.findOneAndUpdate(
